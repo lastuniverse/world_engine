@@ -111,58 +111,36 @@ function cellShow(sx,sy,p,csx,csy,coord){
 	var mix;
 	var level = gscreen.cellsize.half.h-24;
 	var rl = getPseudoRandom(coord.wx,coord.wy,2,64);
+	var type='snow';
 		if( p.t<0 ){
 			rl=rl>>2;
 		}else{
 			rl=rl-(rl>>2);
+			type='sun';
 		}
-			if( p.h < world.lvls.water ){
-				if( p.t<0 ){
-					mix = tiles_mix.water.snow;
-				}else{
-					mix = tiles_mix.water.sun;
-				}
-			}else if( p.h < world.lvls.sand-2 ){
-				if( p.t<0 ){
-					mix = tiles_mix.bich.snow;
-				}else{
-					mix = tiles_mix.bich.sun;
-				}
-				level -= (rl>>1) + 10;
-			}else if( p.h < world.lvls.sand+4 ){
-				if( p.t<0 ){
-					mix = tiles_mix.duna.snow;
-				}else{
-					mix = tiles_mix.duna.sun;
-				}
-				level -= (rl>>1) + 20;
-			}else if( p.h < world.lvls.sand+16 ){
-				if( p.t<0 ){
-					mix = tiles_mix.field.snow;
-				}else{
-					mix = tiles_mix.field.sun;
-				}
-				level -= rl;
-			}else if( p.h < world.lvls.stoun ){
-				if( p.t<0 ){
-					mix = tiles_mix.steppe.snow;
-				}else{
-					mix = tiles_mix.steppe.sun;
-				}
-				level -= rl;
-			}else if( p.h < world.lvls.ice ){
-				if( p.t<0 ){
-					mix = tiles_mix.stoun.snow;
-				}else{
-					mix = tiles_mix.stoun.sun;
-				}
-				level -= rl;
-			}else{
-				mix = tiles_mix.stoun.snow;
-				level -= rl;
-			}
+		if( p.h < world.lvls.water ){
+			mix = tiles_mix.water[type];
+		}else if( p.h < world.lvls.sand-2 ){
+			mix = tiles_mix.bich[type];
+			level -= (rl>>1) + 10;
+		}else if( p.h < world.lvls.sand+4 ){
+			mix = tiles_mix.duna[type];
+			level -= (rl>>1) + 20;
+		}else if( p.h < world.lvls.sand+16 ){
+			mix = tiles_mix.field[type];
+			level -= rl;
+		}else if( p.h < world.lvls.stoun ){
+			mix = tiles_mix.steppe[type];
+			level -= rl;
+		}else if( p.h < world.lvls.ice ){
+			mix = tiles_mix.stoun[type];
+			level -= rl;
+		}else{
+			mix = tiles_mix.stoun.snow;
+			level -= rl;
+		}
 
-   var num = randomTile(mix,coord);
+	var num = randomTile(mix,coord);
 	var tile = mix[num].tiles;
 	var rand = getPseudoRandom(coord.wx,coord.wy,0,tile.numbers);
 	var cur = tile.list[rand];
