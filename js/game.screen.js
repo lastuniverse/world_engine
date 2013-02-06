@@ -19,18 +19,6 @@ var gscreen = {
 		screen: {},
 		shadow: {}
 	},
-	buffer: { // Буферизация вычислений генераторов (реализовано коряво требует переосмысления и переделки)
-		w: 0,
-		h: 0,
-		half: { w: 0, h: 0 },
-		count: 0,
-		curent: 0,
-		old: 0,
-		buffers: [
-			{p:[], dwx:0, dwy:0, max:0},
-			{p:[], dwx:0, dwy:0, max:0}
-		]
-	},
 	screen: { // вычисленные размеры игровой области
 		w: 0,
 		h: 0,
@@ -88,38 +76,6 @@ function cellCreate() {
     return newdiv;
 }
 
-function bufferUpdate(wx,wy){
-	// обновление буфера при перемещении по миру
-	// текущая реализация является просто ЗАГЛУШКОЙ
-	// пока не определился как правильно сделать буферизацию
-	//gscreen.buffer.old = gscreen.buffer.buffers[gscreen.buffer.count];
-	//gscreen.buffer.count = 1-gscreen.buffer.count;
-	gscreen.buffer.current = gscreen.buffer.buffers[gscreen.buffer.count];
-	var dwx=wx-gscreen.buffer.half.w; 
-	var dwy=wy-gscreen.buffer.half.h;
-	if( gscreen.buffer.current.dwx!=dwx || gscreen.buffer.current.dwy!=dwy ){ 
-		gscreen.buffer.current.dwx=dwx;
-		gscreen.buffer.current.dwy=dwy;
-		for(var sy=0; sy<gscreen.buffer.h; sy++ ){
-			var cwy = gscreen.buffer.current.dwy+sy;
-			gscreen.buffer.current.p[sy] = [];
-			for(var sx=0; sx<gscreen.buffer.w; sx++ ){
-				var cwx = gscreen.buffer.current.dwx+sx;
-				var p = point_generator(cwx,cwy);
-				gscreen.buffer.current.p[sy][sx] = p;
-				if( cwx==wx && cwy==wy ){ gscreen.buffer.current.max = p; }
-			}
-		}
-	}
-}
-
-function getPointInBufer(x,y){
-	// получение данных из буфера (выдаются данные для тайла, но координаты уже пересчитанны в координаты буфера)
-	var bx = gscreen.buffer.half.w+x;
-	var by = gscreen.buffer.half.h+y;
-	//say('bx:['+bx+'] by:['+by+']');
-	return gscreen.buffer.current.p[by][bx];
-}
 
 function calcOrtoCoord(sx,sy){
 	// пересчет системы координат используемой в карте в систему координат используемую в игровом окне 
@@ -133,7 +89,10 @@ function calcOrtoCoord(sx,sy){
 
 function screenShow(wx,wy) {
 	// отобразить игровой экран так чтобы координаты мира wx и wy оказались в центре игрового экрана
-	bufferUpdate(wx,wy);
+//var dwy=wy-gscreen.buffer.half.h+sy;
+//var dwx=wx-gscreen.buffer.half.w+sx;
+//var p = point_generator(cwx,cwy);
+
 	for(var sy=0; sy<(gscreen.screen.ph+128); sy+=32) {
 		var csy=sy-gscreen.screen.half.ph;
 		var csdx=(((sy>>5)%2)<<6);
