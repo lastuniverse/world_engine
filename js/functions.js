@@ -1,3 +1,4 @@
+//test
 function getClientWidth()
 {
   return document.compatMode=='CSS1Compat' && !window.opera?document.documentElement.clientWidth:document.body.clientWidth;
